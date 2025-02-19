@@ -1,0 +1,23 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+<form method="POST" action="/jobs">
+  <div>
+    <label name="company">Enter company:</label>
+    <input name="company" />
+  </div>
+  <div>
+    <label name="position">Enter position:</label>
+    <input type="position" name="position" />
+  </div>
+  <div>
+    <label name="status">Enter your status:</label>
+    <input type="status" name="status" />
+  </div>
+  <div>
+    <button type="submit">Add</button>
+    <a href="/jobs/">
+        <button type="button">Cancel</button>
+    </a>
+  </div>
+</form>
+<%- include("partials/footer.ejs") %>

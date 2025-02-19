@@ -14,13 +14,27 @@ import storeLocals from "./middleware/storeLocals.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import secretWordRouter from "./routes/secretWord.js";
 import auth from "./routes/auth.js";
-
+import jobsRouter from "./routes/jobs.js";
+import helmet from 'helmet';
+import xssClean from 'xss-clean';
+import rateLimit from "express-rate-limit";
 
 const MongoDBStore = connectMongoDBSession(session);
 
 env.config();
 
 const app = express();
+
+app.use(express.static("public"));
+
+app.use(
+  helmet({
+    hsts: false,                  // Disable HTTPS enforcement
+  })
+);
+app.use(xssClean());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
 const url = process.env.MONGO_URI;
 
 const store = new MongoDBStore({
@@ -66,6 +80,8 @@ app.get("/", (req, res) => {
 });
 app.use("/sessions", sessionRoutes);
 app.use("/secretWord", auth, secretWordRouter);
+
+app.use("/jobs", auth, jobsRouter);
 
 const port = process.env.PORT || 3000;
 await connectDB(process.env.MONGO_URI);
